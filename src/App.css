@@ -1,28 +1,15 @@
 .app {
-  min-height: 100vh;
-  background: rgb(111, 191, 218);
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
-}
-
-.counter {
-  height: 300 px;
-  width: 300 px;
-  background: grey;
-  color: white;
-  border-radius: 5px;
+  min-height: 200vh;
+  background: black;
+  color: yellow;
   text-align: center;
 }
 
-.albums {
+.alerts {
   height: 300 px;
   width: 300 px;
-  background: grey;
-  color: white;
-  border-radius: 5px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-around;
-  align-items: center;
+  background: yellow;
+  color: black;
+  text-align: left;
+
 }

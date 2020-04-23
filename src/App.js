@@ -1,76 +1,49 @@
-import React, { Component, Fragment } from 'react';
-import { ListGroup } from 'react-bootstrap';
-import { HubConnectionBuilder } from '@microsoft/signalr'
+import React from 'react';
+import Alerts from './Alerts.js';
+import { Navbar, Container, Form, FormControl, InputGroup } from 'react-bootstrap';
+import './App.css';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
-class Chat extends Component {
+const App = () => {
+  return (
+    <div className="app">
+      <Container fluid>
+        <>
+          <Navbar className="bg-light justify-content-between">
+            <Navbar.Brand href="#home">
+              <img
+                src="https://i.postimg.cc/jqccGZJH/epiroc.jpg"
+                width="30"
+                height="30"
+                className="d-inline-block align-top"
+                alt="React Bootstrap logo"
+              />
+            </Navbar.Brand>
+            <Form inline>
+              <InputGroup>
+                <InputGroup.Prepend>
+                  <InputGroup.Text id="basic-addon1">@</InputGroup.Text>
+                </InputGroup.Prepend>
+                <FormControl
+                  placeholder="Username"
+                  aria-label="Username"
+                  aria-describedby="basic-addon1"
+                />
+              </InputGroup>
+            </Form>
+            <Navbar.Toggle />
+            <Navbar.Collapse className="justify-content-end">
+              <Navbar.Text>
+                Signed in as: <a href="#login">Epiroc Agent)</a>
+              </Navbar.Text>
+            </Navbar.Collapse>
+          </Navbar>
+        </>
+        <h3>Alerts App</h3>
+        <Alerts name='epiroc agent'/>
+      </Container>
+    </div>
+  );
+};
 
-    constructor(props) {
-        super(props);
-
-        this.state = {
-            nick: '',
-            message: '',
-            temperatures: [],
-            alerted: [],
-            hubConnection: null,
-            ready: false,
-        };
-    }
-
-    componentDidMount = async () => {
-        const nick = window.prompt('Your name:', 'John');
-        this.setState({
-            nick
-        })
-        const hubConnection = new HubConnectionBuilder()
-            .withUrl('https://eprocbackend.azurewebsites.net/api')
-            .build();
-        console.log(hubConnection);
-
-        await hubConnection.start();
-        this.setState({ ready: true })
-
-        // change below to display in APP
-        console.log('Connected to SignalR server')
-        console.log(this.state.nick + ' connected....')
-
-        hubConnection.on('newMessage', (alert) => {
-            console.log('new alert received')
-            let alerted = this.state.alerted;
-            if (alerted.indexOf(alert.device_id) === -1)
-                alerted.push(alert.device_id)
-            this.setState({ alerted });
-            let temperatures = this.state.temperatures;
-            var idx = -1;
-            for (var i = 0; i < temperatures.length; i++) {
-                if (temperatures[i].device_id == alert.device_id) {
-                    idx = i;
-                }
-            }
-            if (idx === -1) {
-                temperatures.push(alert);
-            } else {
-                let slask = temperatures.splice(idx, 1, alert);
-                this.setState({ temperatures })
-            }
-        });
-    }
-
-    renderItems = () => {
-        const data = this.state.temperatures;
-        const mapRows = data.map((item, index) => (
-            <Fragment key={item.id}>
-                <ListGroup.Item>
-                    <span>[ {item.device_id} ] >> {item.temperature}</span>
-                </ListGroup.Item>
-            </Fragment>
-        ));
-        return mapRows;
-    };
-
-    render() {
-        return <ListGroup>{this.renderItems()}</ListGroup>;
-    }
-}
-
-export default Chat;
+export default App;
